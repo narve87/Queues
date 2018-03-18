@@ -4,11 +4,6 @@ import java.lang.Math;
 public class Caller {
 	static ArrayList<Processor> processors = new ArrayList<Processor>();
 	
-	public void letProcessorWork(Processor p) {
-		while (true) {
-			p.work();
-		}
-	}
 	public static void main(String[] argv) {
 		processors.add(new Processor(1));
 		processors.add(new Processor(2));
