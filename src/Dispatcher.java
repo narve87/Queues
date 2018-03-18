@@ -31,9 +31,9 @@ public class Dispatcher {
   }
   public Processor returnSmallestQueue() {
 	  int smallestCost=this.processors.get(0).returnTotalQueueCost();
-	  Processor processorWithSmallestQueue = null;
+	  Processor processorWithSmallestQueue = this.processors.get(0);
 	  for (Processor p:processors) {
-		  if (p.returnTotalQueueCost()<=smallestCost) {
+		  if (p.returnTotalQueueCost()<smallestCost) {
 			  smallestCost=p.returnTotalQueueCost();
 			  processorWithSmallestQueue=p;
 		  }
