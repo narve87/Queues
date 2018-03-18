@@ -11,6 +11,8 @@ public class Caller {
 		processors.add(new Processor(3,s,1000));
 		
 		Dispatcher dispo = new Dispatcher(processors);
+		s.setDispatcher(dispo);
+		s.setProcessors(processors);
 		while (true){
 			int index =  1 + (int) (Math.random() * 5);
 			for (int i=0; i<index; i++) {

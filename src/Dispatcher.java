@@ -23,12 +23,10 @@ public class Dispatcher {
   
 
   private Process generateProcess() {
-	  int processCost = 750000 + (int) (Math.random() * 15100);
+	  int processCost = 400000 + (int) (Math.random() * 1000000);
 	  return new Process(processCost);
   }
 
-  private void setQueueTime() {
-  }
   public Processor returnSmallestQueue() {
 	  int smallestCost=this.processors.get(0).returnTotalQueueCost();
 	  Processor processorWithSmallestQueue = this.processors.get(0);
