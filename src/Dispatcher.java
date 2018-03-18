@@ -14,7 +14,7 @@ public class Dispatcher {
   public void dispatch() {
 	  this.returnSmallestQueue().enqueue(this.generateProcess());
 	  try {
-		Thread.sleep(50);
+		Thread.sleep(200);
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -23,7 +23,7 @@ public class Dispatcher {
   
 
   private Process generateProcess() {
-	  int processCost = 50 + (int) (Math.random() * 151);
+	  int processCost = 750000 + (int) (Math.random() * 15100);
 	  return new Process(processCost);
   }
 

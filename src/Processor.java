@@ -14,17 +14,20 @@ public class Processor {
   private Supervisor chef;
   
   
-  Processor(int id, Supervisor s){
+  Processor(int id, Supervisor s, int speed){
 	this.id = id;
 	this.myQueue = new Queue();
 	this.chef = s;
-	Thread d = new Thread(this::work);
-	d.start();
+	this.speed = speed;
+	new Thread(this::work).start();
   }
    
 
   private int calculateProcesstime(Process process) {
-	  return process.getCost(); //subject to be changed
+	  if (this.speed!=0) {
+		  return (process.getCost()/this.speed);
+	  }
+	  return process.getCost(); 
   }
 
   public void report() {
@@ -91,5 +94,14 @@ public class Processor {
   }
   public int getStatus() {
 	  return this.status;
+  }
+
+
+  public Integer getSpeed() {
+	return speed;
+  }
+
+  public void setSpeed(Integer speed) {
+	this.speed = speed;
   }
 }

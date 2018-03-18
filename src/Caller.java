@@ -6,9 +6,9 @@ public class Caller {
 	static Supervisor s = new Supervisor();
 	public static void main(String[] argv) {
 		
-		processors.add(new Processor(1,s));
-		processors.add(new Processor(2,s));
-		processors.add(new Processor(3,s));
+		processors.add(new Processor(1,s,2000));
+		processors.add(new Processor(2,s,1500));
+		processors.add(new Processor(3,s,1000));
 		
 		Dispatcher dispo = new Dispatcher(processors);
 		while (true){
