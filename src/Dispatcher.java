@@ -5,7 +5,6 @@ public class Dispatcher {
   private Integer id;
   private ArrayList<Processor> processors;
   
-  private int lastprocessor = 0;
 
   Dispatcher(ArrayList<Processor> processors){
 	  this.processors = processors;
@@ -14,7 +13,7 @@ public class Dispatcher {
   public void dispatch() {
 	  this.returnSmallestQueue().enqueue(this.generateProcess());
 	  try {
-		Thread.sleep(50);
+		Thread.sleep(200);
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -23,17 +22,15 @@ public class Dispatcher {
   
 
   private Process generateProcess() {
-	  int processCost = 50 + (int) (Math.random() * 151);
+	  int processCost = 400000 + (int) (Math.random() * 1000000);
 	  return new Process(processCost);
   }
 
-  private void setQueueTime() {
-  }
   public Processor returnSmallestQueue() {
 	  int smallestCost=this.processors.get(0).returnTotalQueueCost();
-	  Processor processorWithSmallestQueue = null;
+	  Processor processorWithSmallestQueue = this.processors.get(0);
 	  for (Processor p:processors) {
-		  if (p.returnTotalQueueCost()<=smallestCost) {
+		  if (p.returnTotalQueueCost()<smallestCost) {
 			  smallestCost=p.returnTotalQueueCost();
 			  processorWithSmallestQueue=p;
 		  }
