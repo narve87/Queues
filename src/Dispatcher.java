@@ -5,7 +5,6 @@ public class Dispatcher {
   private Integer id;
   private ArrayList<Processor> processors;
   
-  private int lastprocessor = 0;
 
   Dispatcher(ArrayList<Processor> processors){
 	  this.processors = processors;

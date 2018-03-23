@@ -12,7 +12,6 @@ public class Process {
     private Instant endtime;
     private int worker;
 
-    private Queue queue;
 	
     Process(int cost){
 		this.id=index;
