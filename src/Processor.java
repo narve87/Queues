@@ -51,20 +51,18 @@ public class Processor {
 	  while (true) {
 	  tmp = myQueue.getProcess();
 	  if (tmp != null) {
-	  try {
 		  tmp.setStatus(2);
-		  Instant inst = Instant.now();
-		  tmp.setStarttime(inst);
-		  Thread.sleep(this.calculateProcesstime(tmp));
-		  inst = Instant.now();
-		  tmp.setEndtime(inst);
-		  tmp.setStatus(3);
-		  this.chef.handoverProcess(tmp);
-	} catch (InterruptedException e) {
+		  tmp.setStarttime(Instant.now());
+		  try {
+			  Thread.sleep(this.calculateProcesstime(tmp));
+		} catch (InterruptedException e) {
 		//pass
 	}
-	  System.out.println(this.id + " : " + this.myQueue.getQueueLength() + " ; " + tmp.getStarttime() + " : " + tmp.getEndtime());
-	  //this.reportIdleStart();
+	tmp.setEndtime(Instant.now());
+	tmp.setStatus(3);
+	System.out.println(this.id + " : " + this.myQueue.getQueueLength() + " ; " + tmp.getStarttime() + " : " + tmp.getEndtime() + " : " + tmp.getComputationTime());
+	this.chef.handoverProcess(tmp);
+	//this.reportIdleStart();
     }
 	  else {
 		  	this.reportIdleStart();

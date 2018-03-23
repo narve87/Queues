@@ -1,3 +1,4 @@
+import java.time.Duration;
 import java.time.Instant;
 
 public class Process {
@@ -5,7 +6,7 @@ public class Process {
     private static Integer index = 0;
     private Integer id;
     private Integer status;
-    private Integer priority;
+//    private Integer priority;
     private Integer cost;
     private Instant enqueuetime;
 	private Instant starttime;
@@ -30,6 +31,18 @@ public class Process {
 		this.starttime = starttime;
 	}
 
+	
+	public Duration getComputationTime() {
+		return Duration.between(this.starttime, this.endtime);
+	}
+	
+	public Duration getQueueTime() {
+		return Duration.between(this.enqueuetime, this.starttime);
+	}
+	
+	public Duration getTotalTime() {
+		return Duration.between(this.enqueuetime, this.endtime);
+	}
 	public Instant getEndtime() {
 		return endtime;
 	}
