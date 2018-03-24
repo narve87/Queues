@@ -1,53 +1,70 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
 //import java.util.logging.*;
 
 public class Supervisor {
 
-  private ArrayList<Processor> processors;
-    private ArrayList<Process> finishedProcesses;
+	static int processLogCounter=0;
+	private ArrayList<Processor> processors;
     private Dispatcher dispatcher;
     //HAHAHAHAHAHAHAHAHAHA
 
     Supervisor(){
       this.processors = new ArrayList<Processor>();
-      this.finishedProcesses = new ArrayList<Process>();
-      new Thread(() -> {
-		try {
-			log();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}).start();
       }
-  public void setProcessors(ArrayList<Processor> processors) {
-    this.processors = processors;
-  }
-  public void setDispatcher(Dispatcher dispatcher) {
-    this.dispatcher = dispatcher;
-  }
+    
+    public void setProcessors(ArrayList<Processor> processors) {
+    	this.processors = processors;
+    }
+    public void setDispatcher(Dispatcher dispatcher) {
+    	this.dispatcher = dispatcher;
+    }
 
-  public void log() throws IOException {
-	@SuppressWarnings("resource")
-	FileWriter fw = new FileWriter("Processes.txt");
-	
-	while (true) {
-	//	System.out.println(finishedProcesses.size());
-	//	if (true) {
-		if(this.finishedProcesses.size()>=8) {
-			System.out.println("Gotcha");
-			for (int i=0; i<5; i++) {
-				if (finishedProcesses.get(i)!=null) {
-					fw.write("Process #" + finishedProcesses.get(i).getId() + " was in Queue for " + finishedProcesses.get(i).getQueueTime().toMillis() + "ms." + System.lineSeparator());
-					finishedProcesses.remove(finishedProcesses.get(i));
-				}
-			} 
-		}
-	}
+  public Duration getAverageQueueTime(ArrayList<Process> toCheck) {
+	  if(toCheck.size()<0) {
+		  Duration total = null;	  
+		  for (Process p:toCheck) {
+			  total = total.plus(p.getQueueTime());  
+		  }
+		  return total.dividedBy((long)toCheck.size());
+	  }
+	  return null;
   }
-  public void handoverProcess(Process p) {
-  this.finishedProcesses.add(p);  
+  
+  public boolean assignNewProcessor(ArrayList<Process> finishedProcesses) {
+	  if (this.getAverageQueueTime(finishedProcesses).toMillis()>=Duration.ofMillis(4000).toMillis()) {
+		  Processor p = new Processor(this,2000);
+		  dispatcher.additionalProcessor(p);
+		  this.processors.add(p);
+		  return true;
+	  }
+	  return false;
+  }
+  
+  public void log(ArrayList<Process> toLog) throws IOException {
+	  if(toLog!=null) {
+		  FileWriter fw = new FileWriter("Processes"+ processLogCounter + ".log");
+		  processLogCounter++;
+		  fw.write("Status for the last " + toLog.size() +  " generated Processes:" + System.lineSeparator());
+		  int finished=0;
+		  int queued=0;
+		  Duration totalQueueTime = Duration.ZERO;
+		  Duration totalComputationTime = Duration.ZERO;
+		  for (Process p:toLog) {
+			  if (p.getStatus()==3) {
+				 finished++;
+				 totalQueueTime=totalQueueTime.plus(p.getQueueTime());
+				 totalComputationTime=totalComputationTime.plus(p.getComputationTime());
+		  		}
+		  		if (p.getStatus()==2) {
+		  			queued++;
+		  		}
+		  }
+		  fw.write("Processes in Queue: " + queued + System.lineSeparator() + "Finished Processes: " + finished + System.lineSeparator() + "Average time in Queue for finished Processes: " + totalQueueTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator() + "Average computation time for finished processes: " + totalComputationTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator());
+		  fw.close();
+	  }
   }
 }

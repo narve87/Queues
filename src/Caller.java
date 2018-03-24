@@ -6,18 +6,16 @@ public class Caller {
 	static Supervisor s = new Supervisor();
 	public static void main(String[] argv) {
 		
-		processors.add(new Processor(1,s,2000));
-		processors.add(new Processor(2,s,1500));
-		processors.add(new Processor(3,s,1000));
+		processors.add(new Processor(s,2000));
+		processors.add(new Processor(s,1500));
+		processors.add(new Processor(s,1000));
 		
 		Dispatcher dispo = new Dispatcher(processors);
+		dispo.setSupervisor(s);
 		s.setDispatcher(dispo);
 		s.setProcessors(processors);
 		while (true){
-			int index =  1 + (int) (Math.random() * 5);
-			for (int i=0; i<index; i++) {
-				dispo.dispatch();
-			}
+			dispo.dispatch();
 		}
 	
 	}

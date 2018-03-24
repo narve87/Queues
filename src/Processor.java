@@ -2,7 +2,8 @@ import java.time.Instant;
 
 public class Processor {
 
-  private Integer id;
+	static int counter = 0;
+	private Integer id;
 
   private Integer status;
 
@@ -14,8 +15,9 @@ public class Processor {
   private Supervisor chef;
   
   
-  Processor(int id, Supervisor s, int speed){
-	this.id = id;
+  Processor(Supervisor s, int speed){
+	  counter++;
+	this.id = counter;
 	this.myQueue = new Queue();
 	this.chef = s;
 	this.speed = speed;
@@ -60,8 +62,7 @@ public class Processor {
 	}
 	tmp.setEndtime(Instant.now());
 	tmp.setStatus(3);
-	System.out.println(this.id + " : " + this.myQueue.getQueueLength() + " ; " + tmp.getStarttime() + " : " + tmp.getEndtime() + " : " + tmp.getComputationTime());
-	this.chef.handoverProcess(tmp);
+	System.out.println(this.id + " : " + this.myQueue.getQueueLength() + " ; " + tmp.getStarttime() + " : " + tmp.getEndtime() + " : " + tmp.getComputationTime().toMillis());
 	//this.reportIdleStart();
     }
 	  else {
