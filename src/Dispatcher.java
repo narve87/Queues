@@ -26,7 +26,7 @@ public class Dispatcher {
 	  this.returnSmallestQueue().enqueue(p);
 	  this.countOfDispatchedProcesses++;
 	  this.dispatchedProcesses.add(p);
-	  if (this.countOfDispatchedProcesses>=10) {
+	  if (this.countOfDispatchedProcesses>=100) {
 		  try {
 			supervisor.log(dispatchedProcesses);
 		} catch (IOException e) {

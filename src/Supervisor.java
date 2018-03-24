@@ -51,6 +51,7 @@ public class Supervisor {
 		  fw.write("Status for the last " + toLog.size() +  " generated Processes:" + System.lineSeparator());
 		  int finished=0;
 		  int queued=0;
+		  int inProgress=0;
 		  Duration totalQueueTime = Duration.ZERO;
 		  Duration totalComputationTime = Duration.ZERO;
 		  for (Process p:toLog) {
@@ -59,11 +60,14 @@ public class Supervisor {
 				 totalQueueTime=totalQueueTime.plus(p.getQueueTime());
 				 totalComputationTime=totalComputationTime.plus(p.getComputationTime());
 		  		}
-		  		if (p.getStatus()==2) {
+		  		if (p.getStatus()==1) {
 		  			queued++;
 		  		}
+		  		if (p.getStatus()==2) {
+		  			inProgress++;
+		  		}
 		  }
-		  fw.write("Processes in Queue: " + queued + System.lineSeparator() + "Finished Processes: " + finished + System.lineSeparator() + "Average time in Queue for finished Processes: " + totalQueueTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator() + "Average computation time for finished processes: " + totalComputationTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator());
+		  fw.write("Processes in Queue: " + queued + System.lineSeparator() + "Processes currently in progress: " + inProgress + System.lineSeparator() + "Finished Processes: " + finished + System.lineSeparator() + "Average time in Queue for finished Processes: " + totalQueueTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator() + "Average computation time for finished processes: " + totalComputationTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator());
 		  fw.close();
 	  }
   }
