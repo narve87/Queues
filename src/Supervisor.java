@@ -1,7 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 //import java.util.logging.*;
 
@@ -24,18 +23,42 @@ public class Supervisor {
     }
 
   public Duration getAverageQueueTime(ArrayList<Process> toCheck) {
-	  if(toCheck.size()<0) {
-		  Duration total = null;	  
+	  if(toCheck.size()>0) {
+		  int processed=0;
+		  Duration total = Duration.ZERO;	  
 		  for (Process p:toCheck) {
-			  total = total.plus(p.getQueueTime());  
+			  if (p.getStatus()>0) {
+				  total = total.plus(p.getTimeInQueue());
+				  processed++;
+			  }
 		  }
-		  return total.dividedBy((long)toCheck.size());
+		  if(processed!=0) {
+			  return total.dividedBy(processed);  
+		  }
+		  
 	  }
-	  return null;
+	  return Duration.ofMillis(8000);
+  }
+  public Duration getAverageComputationTime(ArrayList<Process> toCheck) {
+	  if(toCheck.size()>0) {
+		  int processed=0;
+		  Duration total = Duration.ZERO;	  
+		  for (Process p:toCheck) {
+			  if (p.getStatus()>1) {
+				  total = total.plus(p.getTimeInComputation());
+				  processed++;
+			  }
+		  }
+		  if(processed!=0) {
+			  return total.dividedBy(processed);  
+		  }
+		  
+	  }
+	  return Duration.ofMillis(3000);
   }
   
-  public boolean assignNewProcessor(ArrayList<Process> finishedProcesses) {
-	  if (this.getAverageQueueTime(finishedProcesses).toMillis()>=Duration.ofMillis(4000).toMillis()) {
+  public boolean assignNewProcessor(ArrayList<Process> toCheck) {
+	  if (this.getAverageQueueTime(toCheck).toMillis()>=3000) {
 		  Processor p = new Processor(this,2000);
 		  dispatcher.additionalProcessor(p);
 		  this.processors.add(p);
@@ -67,7 +90,8 @@ public class Supervisor {
 		  			inProgress++;
 		  		}
 		  }
-		  fw.write("Processes in Queue: " + queued + System.lineSeparator() + "Processes currently in progress: " + inProgress + System.lineSeparator() + "Finished Processes: " + finished + System.lineSeparator() + "Average time in Queue for finished Processes: " + totalQueueTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator() + "Average computation time for finished processes: " + totalComputationTime.dividedBy(finished).toMillis() + "ms" + System.lineSeparator());
+		  fw.write("Processes in Queue: " + queued + System.lineSeparator() + "Processes currently in progress: " + inProgress + System.lineSeparator() + "Finished Processes: " + finished + System.lineSeparator());
+		  fw.write("Average time in Queue: " + this.getAverageQueueTime(toLog).toMillis() + "ms" + System.lineSeparator() + "Average computation time: " + this.getAverageComputationTime(toLog).toMillis() + "ms" + System.lineSeparator());
 		  fw.close();
 	  }
   }

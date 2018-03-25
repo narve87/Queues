@@ -26,7 +26,26 @@ public class Process {
 	public Instant getStarttime() {
 		return starttime;
 	}
-
+	
+	public Duration getTimeInQueue() {
+		if (this.getStatus()==1) {
+			return Duration.between(this.enqueuetime, Instant.now());
+		}
+		if (this.getStatus()==2 || this.getStatus()==3) {
+			return this.getQueueTime();
+		}
+		return Duration.ZERO;
+	}
+	public Duration getTimeInComputation() {
+		if (this.getStatus()==3) {
+			return this.getComputationTime();
+		}
+		if (this.getStatus()==2) {
+			return Duration.between(this.getStarttime(), Instant.now());
+		}
+		return Duration.ZERO;
+	}
+	
 	public void setStarttime(Instant starttime) {
 		this.starttime = starttime;
 	}

@@ -5,11 +5,7 @@ public class Caller {
 	static ArrayList<Processor> processors = new ArrayList<Processor>();
 	static Supervisor s = new Supervisor();
 	public static void main(String[] argv) {
-		
 		processors.add(new Processor(s,2000));
-		processors.add(new Processor(s,1500));
-		processors.add(new Processor(s,1000));
-		
 		Dispatcher dispo = new Dispatcher(processors);
 		dispo.setSupervisor(s);
 		s.setDispatcher(dispo);

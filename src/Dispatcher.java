@@ -26,6 +26,18 @@ public class Dispatcher {
 	  this.returnSmallestQueue().enqueue(p);
 	  this.countOfDispatchedProcesses++;
 	  this.dispatchedProcesses.add(p);
+	  
+	  try {
+		Thread.sleep(200);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  if((countOfDispatchedProcesses%20)==0) {
+		  if(supervisor.assignNewProcessor(dispatchedProcesses)) {
+			  System.out.println("New processor assigned due to long average Queuetimes");
+		  }
+	  }
 	  if (this.countOfDispatchedProcesses>=100) {
 		  try {
 			supervisor.log(dispatchedProcesses);
@@ -35,12 +47,7 @@ public class Dispatcher {
 		  dispatchedProcesses.clear();
 		  countOfDispatchedProcesses=0;
 	  }
-	  try {
-		Thread.sleep(200);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	  
   }
   public boolean additionalProcessor(Processor p) {
 	  if(p!=null) {
