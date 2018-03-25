@@ -44,10 +44,12 @@ public class Processor {
 
   private void reportIdleStart() {
 	  System.out.println("Processor #" + this.id + " is idle."); 
+	  this.status=1;
   }
 
   private void reportIdleEnd() {
 	  System.out.println("Processor #" + this.id + " is no longer idle.");
+	  this.status=0;
   }
   
   public void work() {

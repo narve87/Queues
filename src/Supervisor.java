@@ -21,7 +21,7 @@ public class Supervisor {
     public boolean removeIdleProcessors(ArrayList<Processor> processors) {
     	int removed=0;
     	for (Processor p:processors) {
-    		if (Duration.between(p.getLastProcessCompleted(), Instant.now()).toMillis()>1000){
+    		if ((Duration.between(p.getLastProcessCompleted(), Instant.now()).toMillis()>2000)&&p.getStatus()==1){
     			dispatcher.removeProcessor(p);
     			removed++;
     			System.out.println("Processor #" + p.getId() + " was closed due to an extended idletime.");
