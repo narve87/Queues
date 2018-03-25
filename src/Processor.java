@@ -5,32 +5,33 @@ public class Processor {
 	static int counter = 0;
 	private Integer id;
 
-  private Integer status;
-
-  private Integer speed;
-
-  private Queue myQueue;
+	private Integer status;
+	private Integer speed;
+	private Queue myQueue;
+	private Process tmp;
+	private Supervisor chef;
+	private Instant lastProcessCompleted;
   
-  private Process tmp;
-  private Supervisor chef;
-  
-  
-  Processor(Supervisor s, int speed){
-	  counter++;
-	this.id = counter;
-	this.myQueue = new Queue();
-	this.chef = s;
-	this.speed = speed;
-	new Thread(this::work).start();
-  }
+	Processor(Supervisor s, int speed){
+		counter++;
+		this.id = counter;
+		this.myQueue = new Queue();
+		this.chef = s;
+		this.speed = speed;
+		this.lastProcessCompleted=Instant.now();
+		new Thread(this::work).start();
+	}
    
 
-  private int calculateProcesstime(Process process) {
-	  if (this.speed!=0) {
-		  return (process.getCost()/this.speed);
-	  }
-	  return process.getCost(); 
-  }
+	public Instant getLastProcessCompleted() {
+		return this.lastProcessCompleted;
+	}
+	private int calculateProcesstime(Process process) {
+		if (this.speed!=0) {
+			return (process.getCost()/this.speed);
+		}
+		return process.getCost(); 
+	}
 
   public void report() {
   }
@@ -64,6 +65,7 @@ public class Processor {
 	tmp.setStatus(3);
 	System.out.println(this.id + " : " + this.myQueue.getQueueLength() + " ; " + tmp.getStarttime() + " : " + tmp.getEndtime() + " : " + tmp.getComputationTime().toMillis());
 	//this.reportIdleStart();
+	this.lastProcessCompleted = Instant.now();
     }
 	  else {
 		  	this.reportIdleStart();
@@ -94,6 +96,9 @@ public class Processor {
 	  return this.status;
   }
 
+  public Integer getId() {
+	  return this.id;
+  }
 
   public Integer getSpeed() {
 	return speed;

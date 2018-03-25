@@ -9,7 +9,6 @@ public class Caller {
 		Dispatcher dispo = new Dispatcher(processors);
 		dispo.setSupervisor(s);
 		s.setDispatcher(dispo);
-		s.setProcessors(processors);
 		while (true){
 			dispo.dispatch();
 		}

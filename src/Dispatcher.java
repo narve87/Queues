@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Dispatcher {
 
-  private Integer id;
+  //private Integer id;
   private ArrayList<Processor> processors;
   private Supervisor supervisor;
   private int countOfDispatchedProcesses;
@@ -20,7 +20,8 @@ public class Dispatcher {
 	  this.supervisor = supervisor;
   }
   
-  public void dispatch() {
+  @SuppressWarnings("unchecked")
+public void dispatch() {
 	  
 	  Process p = this.generateProcess();
 	  this.returnSmallestQueue().enqueue(p);
@@ -34,8 +35,12 @@ public class Dispatcher {
 		e.printStackTrace();
 	}
 	  if((countOfDispatchedProcesses%20)==0) {
-		  if(supervisor.assignNewProcessor(dispatchedProcesses)) {
+		  if (supervisor.removeIdleProcessors((ArrayList<Processor>) processors.clone())) {
+			  //System.out.println(processors.size());
+		  }
+		  if (supervisor.assignNewProcessor(dispatchedProcesses)) {
 			  System.out.println("New processor assigned due to long average Queuetimes");
+			  //System.out.println(processors.size());
 		  }
 	  }
 	  if (this.countOfDispatchedProcesses>=100) {
@@ -57,18 +62,8 @@ public class Dispatcher {
 	  return false;
   }
   
-  public boolean removeProcessor() {
-	  if (this.processors.size()>=2) {
-		  int smallestSpeed=this.processors.get(0).getSpeed();
-		  Processor slowestProcessor = this.processors.get(0);
-		  for (Processor p:this.processors) {
-			  if(p.getSpeed()<smallestSpeed) {
-				  slowestProcessor = p;
-			  }
-		  }
-		  return this.processors.remove(slowestProcessor);
-	  }
-	  return false;
+  public boolean removeProcessor(Processor p) {
+	  return processors.remove(p);
   }
 
   private Process generateProcess() {

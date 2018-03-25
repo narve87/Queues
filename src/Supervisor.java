@@ -1,27 +1,37 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 //import java.util.logging.*;
 
 public class Supervisor {
 
 	static int processLogCounter=0;
-	private ArrayList<Processor> processors;
     private Dispatcher dispatcher;
     //HAHAHAHAHAHAHAHAHAHA
 
     Supervisor(){
-      this.processors = new ArrayList<Processor>();
       }
     
-    public void setProcessors(ArrayList<Processor> processors) {
-    	this.processors = processors;
-    }
     public void setDispatcher(Dispatcher dispatcher) {
     	this.dispatcher = dispatcher;
     }
 
+    public boolean removeIdleProcessors(ArrayList<Processor> processors) {
+    	int removed=0;
+    	for (Processor p:processors) {
+    		if (Duration.between(p.getLastProcessCompleted(), Instant.now()).toMillis()>1000){
+    			dispatcher.removeProcessor(p);
+    			removed++;
+    			System.out.println("Processor #" + p.getId() + " was closed due to an extended idletime.");
+    		}
+    	}
+    	if(removed==0) {
+    		return false;
+    	}
+    	return true;
+    }
   public Duration getAverageQueueTime(ArrayList<Process> toCheck) {
 	  if(toCheck.size()>0) {
 		  int processed=0;
@@ -61,7 +71,6 @@ public class Supervisor {
 	  if (this.getAverageQueueTime(toCheck).toMillis()>=3000) {
 		  Processor p = new Processor(this,2000);
 		  dispatcher.additionalProcessor(p);
-		  this.processors.add(p);
 		  return true;
 	  }
 	  return false;
