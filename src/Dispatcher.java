@@ -38,7 +38,7 @@ public void dispatch() {
 		  if (supervisor.removeIdleProcessors((ArrayList<Processor>) processors.clone())) {
 			  //System.out.println(processors.size());
 		  }
-		  if (supervisor.assignNewProcessor(dispatchedProcesses)) {
+		  if (supervisor.assignNewProcessor(dispatchedProcesses, this.processors)) {
 			  System.out.println("New processor assigned due to long average Queuetimes");
 			  //System.out.println(processors.size());
 		  }

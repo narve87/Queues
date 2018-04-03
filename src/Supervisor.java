@@ -9,9 +9,11 @@ public class Supervisor {
 
 	static int processLogCounter=0;
     private Dispatcher dispatcher;
+    private int maxProcessors;
     //HAHAHAHAHAHAHAHAHAHA
 
-    Supervisor(){
+    Supervisor(int maxProcessors){
+    	this.maxProcessors=maxProcessors;
       }
     
     public void setDispatcher(Dispatcher dispatcher) {
@@ -67,8 +69,9 @@ public class Supervisor {
 	  return Duration.ofMillis(3000);
   }
   
-  public boolean assignNewProcessor(ArrayList<Process> toCheck) {
-	  if (this.getAverageQueueTime(toCheck).toMillis()>=3000) {
+  public boolean assignNewProcessor(ArrayList<Process> toCheck, ArrayList<Processor> processors) {
+	  
+	  if ((this.getAverageQueueTime(toCheck).toMillis()>=3000)&&((processors.size()<this.maxProcessors))^(this.maxProcessors==0)) {
 		  Processor p = new Processor(this,2000);
 		  dispatcher.additionalProcessor(p);
 		  return true;
